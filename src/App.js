@@ -1,8 +1,14 @@
-import React from 'react';
+import React, {Fragment} from 'react';
+
+/* Layout */
+import Header from "./components/layout/Header";
 
 function App() {
   return (
-    <h1>Hola</h1>
-  ) 
+    <Fragment>
+      <Header/>
+    </Fragment>
+  );
 }
+
 export default App;
