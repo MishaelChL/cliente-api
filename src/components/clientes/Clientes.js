@@ -2,6 +2,8 @@ import React, {useEffect, useState, Fragment} from 'react';
 
 import clienteAxios from "../../config/axios";
 
+import Cliente from "./Cliente";
+
 function Clientes() {
 
     //trabajar con el state
@@ -26,9 +28,13 @@ function Clientes() {
         <Fragment>
             <h2>Clientes</h2>
             <ul className="listado-clientes">
-                {clientes.map(cliente => {
-                    console.log(cliente);                    
-                })}
+                {clientes.map(cliente => (
+                    // console.log(cliente);
+                    <Cliente 
+                        key={cliente._id} //react necesita si o si de una key, en este caso seria el id, ya que debe ser unico
+                        cliente={cliente}
+                    />                    
+                ))}
             </ul>    
         </Fragment>
     );
