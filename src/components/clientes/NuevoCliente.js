@@ -24,6 +24,18 @@ function NuevoCliente() {
         // console.log(cliente);
     }
 
+    //validar formulario
+    const validarCliente = () => {
+        //Destructuring
+        const {nombre, apellido, email, empresa, telefono} = cliente;
+
+        //revisar que las propiedades del objeto tengan contenido
+        let valido = !nombre.length || !apellido.length || !email.length || !empresa.length || !telefono.length;
+
+        //return true o false
+        return valido;
+    }
+
     return (
         <Fragment>
             <h2>Nuevo Cliente</h2>
@@ -58,7 +70,7 @@ function NuevoCliente() {
                 </div>
 
                 <div className="enviar">
-                        <input type="submit" className="btn btn-azul" value="Agregar Cliente" />
+                    <input type="submit" className="btn btn-azul" value="Agregar Cliente" disabled={validarCliente()} /> {/* el parentesis indica que se ejecute inmediatamente sin esperar un evento */}
                 </div>
 
             </form>
