@@ -18,19 +18,19 @@ function EditarCliente(props) {
         telefono: "",
     });
 
-    //Query a la API
-    const consultarAPI = async () => {
-        const clienteConsulta = await clienteAxios.get(`/clientes/${id}`);
-        // console.log(clienteConsulta.data);
-
-        //consultar al state
-        datosCliente(clienteConsulta.data);
-    }
-
     //useEffect, cuando el componente carga
-    useEffect(() => {
+    useEffect( () => {
+        //Query a la API
+        async function consultarAPI(){
+            const clienteConsulta = await clienteAxios.get(`/clientes/${id}`);
+            // console.log(clienteConsulta.data);
+
+            // colocar en el state
+            datosCliente(clienteConsulta.data);
+        }
+        
         consultarAPI();
-    }, []);
+    }, [id]);
 
     //leer los datos de los formularios
     const actualizarState = (e) => {
@@ -57,11 +57,41 @@ function EditarCliente(props) {
         return valido;
     }
 
+    //envia una peticion por axios para actualizar el cliente
+    const actualizarCliente = (e) => {
+        e.preventDefault();
+        
+        //enviar peticion por axios
+        clienteAxios.put(`/clientes/${cliente._id}`, cliente)
+        .then(res => {
+            // console.log(res);
+            //validar si hay errores de mongo
+            if(res.data.code === 11000){
+                // console.log("Error de duplicado de mongo");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hubo un error',
+                    text: "Ese cliente ya está registrado"
+                });
+            }else{
+                // console.log(res.data);
+                Swal.fire(
+                    'Correcto!',
+                    'Se actualizó correctamente',
+                    'success'
+                );
+            }
+
+            //redireccionar
+            props.history.push("/");
+        })
+    }
+
     return (
         <Fragment>
             <h2>Editar Cliente</h2>
 
-            <form>
+            <form onSubmit={actualizarCliente}>
                 <legend>Llena todos los campos</legend>
 
                 {/* onChange, onSubmit, onClick */}
