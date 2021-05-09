@@ -11,19 +11,26 @@ function Clientes() {
     //clientes = statem guardarClientes = funcion para guardar el state
     const [clientes, guardarClientes] = useState([]);
 
-    //query a la api
-    const consultarApi = async () => {
-        const clientesConsulta = await clienteAxios.get("/clientes");
-        // console.log(clientesConsulta.data);
-
-        //colocar el resultado en el state
-        guardarClientes(clientesConsulta.data);
-    }
-
     //use effect es para los hooks, es similar a componentdidmount y willmount
     useEffect( () => {
+        const abortController = new AbortController();
+        const signal = abortController.signal;
+        
+        //query a la api
+        async function consultarApi(){
+            const clientesConsulta = await clienteAxios.get("/clientes", { signal });
+            // console.log(clientesConsulta.data);
+
+            //colocar el resultado en el state
+            guardarClientes(clientesConsulta.data);
+        }
+
         consultarApi();
-    },[]);
+
+        return function cleanup() {
+            abortController.abort();
+        };
+    },[clientes]); //los corchetes, cuando los clientes cambien, vuelve a hacer un llamado a consultar Api, es como un refresh a la misma pagina
 
     return(
         <Fragment>
