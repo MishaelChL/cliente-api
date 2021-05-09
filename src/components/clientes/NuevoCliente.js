@@ -1,7 +1,9 @@
 import React, {Fragment, useState} from 'react';
 import clienteAxios from "../../config/axios";
+import Swal from "sweetalert2";
+import { withRouter } from "react-router-dom"; // para redireccionar
 
-function NuevoCliente() {
+function NuevoCliente({history}) {
 
     // cliente = state, guardarCliente = funcion para guardar el state
     const [cliente, guardarCliente] = useState({
@@ -47,13 +49,23 @@ function NuevoCliente() {
                 // console.log(res);
                 //validar si hay errores de mongo
                 if(res.data.code === 11000){
-                    console.log("Error de duplicado de mongo");
+                    // console.log("Error de duplicado de mongo");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hubo un error',
+                        text: "Ese cliente ya está registrado"
+                    });
                 }else{
-                    console.log(res.data);
+                    // console.log(res.data);
+                    Swal.fire(
+                        'Se agrego el cliente!',
+                        res.data.mensaje,
+                        'success'
+                    );
                 }
 
                 //redireccionar
-                
+                history.push("/");
             });
     }
 
@@ -100,4 +112,5 @@ function NuevoCliente() {
     );
 }
 
-export default NuevoCliente;
+//HOC, Hight order component, es una funcion que toma un componente y retorna un nuevo componente
+export default withRouter(NuevoCliente);
