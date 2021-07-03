@@ -29,6 +29,45 @@ function EditarProducto(props) {
         consultarAPI();
     }, []);
 
+    //edita un producto en la bd
+    const editarProducto = async e => {
+        e.preventDefault();
+        
+        //crear un formdata
+        const formData = new FormData();
+        formData.append('nombre', producto.nombre);
+        formData.append('precio', producto.precio);
+        formData.append('imagen', archivo);
+
+        //almacenarlo en BD
+        try {
+            const res = await clienteAxios.put(`/productos/${id}`, formData, {
+                headers: {
+                    'Content-Type' : 'multipart/form-data'
+                }
+            });
+            
+            if(res.status === 200){
+                Swal.fire(
+                    'Editado Correctamente',
+                    res.data.mensaje,
+                    'success'
+                );
+            }
+
+            //redireccionar
+            props.history.push('/productos')
+
+        } catch (error) {
+            console.log(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Algo ocurrió mal, intente de nuevo!',
+            })
+        }
+    }
+
     //leer los datos del formulario
     const leerInformacionProducto = e => {
         guardarProducto({
@@ -52,7 +91,7 @@ function EditarProducto(props) {
         <Fragment>
             <h2>Editar Producto</h2>
 
-            <form>
+            <form onSubmit={editarProducto}>
                 <legend>Llena todos los campos</legend>
 
                 <div className="campo">
@@ -76,7 +115,7 @@ function EditarProducto(props) {
                 </div>
 
                 <div className="enviar">
-                        <input type="submit" className="btn btn-azul" value="Agregar Producto" />
+                        <input type="submit" className="btn btn-azul" value="Editar Producto" />
                 </div>
             </form>
         </Fragment> 
