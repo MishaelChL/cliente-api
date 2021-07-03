@@ -22,7 +22,7 @@ function Productos() {
         //llamado a la API
         consultaAPI();
 
-    }, []);
+    }, [productos]);
 
     return(
         <Fragment>
