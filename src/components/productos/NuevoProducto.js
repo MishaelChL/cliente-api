@@ -1,6 +1,9 @@
 import React, {useState, Fragment} from 'react';
+import Swal from 'sweetalert2';
+import clienteAxios from '../../config/axios';
+import {withRouter} from 'react-router-dom'; //sirve para redireccionar mas la linea 44
 
-function NuevoProducto() {
+function NuevoProducto(props) {
     
     //producto = state, guardarProducto = setState
     const [producto, guardarProducto] = useState({
@@ -10,6 +13,45 @@ function NuevoProducto() {
 
     //archivo = state, guardarArchivo = setState
     const [archivo, guardarArchivo] = useState('');
+
+    //almacena el nuevo producto en la base de datos
+    const agregarProducto = async e => {
+        e.preventDefault();
+        
+        //crear un formdata
+        const formData = new FormData();
+        formData.append('nombre', producto.nombre);
+        formData.append('precio', producto.precio);
+        formData.append('imagen', archivo);
+
+        //almacenarlo en BD
+        try {
+            const res = await clienteAxios.post('/productos', formData, {
+                headers: {
+                    'Content-Type' : 'multipart/form-data'
+                }
+            });
+            
+            if(res.status === 200){
+                Swal.fire(
+                    'Agregado Correctamente',
+                    res.data.mensaje,
+                    'success'
+                );
+            }
+
+            //redireccionar
+            props.history.push('/productos')
+
+        } catch (error) {
+            console.log(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Algo ocurrió mal, intente de nuevo!',
+            })
+        }
+    }
 
     //leer los datos del formulario
     const leerInformacionProducto = e => {
@@ -29,7 +71,7 @@ function NuevoProducto() {
         <Fragment>
             <h2>Nuevo Producto</h2>
 
-            <form>
+            <form onSubmit={agregarProducto} >
                 <legend>Llena todos los campos</legend>
 
                 <div className="campo">
@@ -55,4 +97,4 @@ function NuevoProducto() {
     );
 }
 
-export default NuevoProducto;
+export default withRouter(NuevoProducto);
