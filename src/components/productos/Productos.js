@@ -6,6 +6,8 @@ import clienteAxios from '../../config/axios';
 
 import Producto from './Producto';
 
+import Spinner from '../layout/Spinner';
+
 function Productos() {
 
     //productos = state, guardarproductos = funcion para guardar el state
@@ -23,6 +25,10 @@ function Productos() {
         consultaAPI();
 
     }, [productos]);
+
+    //Spinner de carga
+
+    if(!productos.length) return <Spinner />
 
     return(
         <Fragment>

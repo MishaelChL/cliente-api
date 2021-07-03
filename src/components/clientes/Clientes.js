@@ -5,6 +5,8 @@ import clienteAxios from "../../config/axios";
 import Cliente from "./Cliente";
 import {Link} from "react-router-dom";
 
+import Spinner from '../layout/Spinner';
+
 function Clientes() {
 
     //trabajar con el state
@@ -31,6 +33,8 @@ function Clientes() {
             abortController.abort();
         };
     },[clientes]); //los corchetes, cuando los clientes cambien, vuelve a hacer un llamado a consultar Api, es como un refresh a la misma pagina
+
+    if(!clientes.length) return <Spinner />
 
     return(
         <Fragment>
