@@ -1,6 +1,7 @@
 import React, {useState, useEffect, Fragment} from 'react';
 import clienteAxios from '../../config/axios';
 import FormBuscarProducto from './FormBuscarProducto';
+import Swal from 'sweetalert2';
 
 function NuevoPedido(props){
 
@@ -9,6 +10,7 @@ function NuevoPedido(props){
 
     //state
     const [cliente, guardarCliente] = useState({}); //3
+    const [busqueda, guardarBusqueda] = useState('');
 
     useEffect(() => {       //Ojooooooooooooooooooo primero se hace el useeffect, luego el usestate
         //obtener el cliente
@@ -26,12 +28,29 @@ function NuevoPedido(props){
 
 
 
-    const buscarProducto = () => {
+    const buscarProducto = async e => {
+        e.preventDefault();
+        
+        //obtener los productos de la busqueda
+        const resultadoBusqueda = await clienteAxios.post(`/productos/busqueda/${busqueda}`);
+        console.log(resultadoBusqueda);
 
+        //si no hubo resultados, mostrar una alerta, caso contrario agregarlo al state
+        if(resultadoBusqueda.data[0]){
+            
+        }else{
+            //no hay resultados
+            Swal.fire({
+                icon: 'error',
+                title: 'No resultados',
+                text: 'No hay resultados'
+            })
+        }
     }
 
-    const leerDatosBusqueda = () => {
-
+    //almacenar una busqueda en el state
+    const leerDatosBusqueda = e => {
+        guardarBusqueda( e.target.value );
     }
 
 
