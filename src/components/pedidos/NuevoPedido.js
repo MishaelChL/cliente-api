@@ -64,7 +64,14 @@ function NuevoPedido(props){
         guardarBusqueda( e.target.value );
     }
 
+    //actualizar la cantidad de productos
+    const restarProductos = i => {
+        console.log('uno menos...', i);
+    }
 
+    const aumentarProductos = i => {
+        console.log('uno mas...', i);
+    }
 
     return(
         <Fragment>
@@ -86,6 +93,9 @@ function NuevoPedido(props){
                     <FormCantidadProducto
                         key={producto.producto}
                         producto={producto}
+                        restarProductos={restarProductos}
+                        aumentarProductos={aumentarProductos}
+                        index={index}
                     />
                 ))}
             </ul>
