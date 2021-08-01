@@ -3,6 +3,7 @@ import clienteAxios from '../../config/axios';
 import Swal from 'sweetalert2';
 import FormBuscarProducto from './FormBuscarProducto';
 import FormCantidadProducto from './FormCantidadProducto';
+import { withRouter } from 'react-router-dom';
 
 function NuevoPedido(props){
 
@@ -122,6 +123,45 @@ function NuevoPedido(props){
         guardarTotal(nuevoTotal);
     }
 
+    //Almacena el pedido en la bd
+    const realizarPedido = async e => {
+        e.preventDefault();
+
+        //extraer el id del cliente
+        const {id} = props.match.params
+
+        //construir el objeto
+        const pedido = {
+            "cliente": id,
+            "pedido": productos,
+            "total": total
+        }
+        // console.log(pedido);
+
+        //almacenarlo en la bd
+        const resultado = await clienteAxios.post(`/pedidos/nuevo/${id}`, pedido);
+
+        //leer el resultado 
+        if (resultado.status === 200){
+            //alerta todo bien
+            Swal.fire({
+                icon: 'success',
+                title: 'Correcto',
+                text: resultado.data.mensaje
+            })
+        }else{
+            //alerta de error
+            Swal.fire({
+                icon: 'error',
+                title: 'Hubo un error',
+                text: 'Vuelva a intentarlo'
+            })
+        }
+
+        //redireccionar
+        props.history.push('/pedidos');
+    }
+
     return(
         <Fragment>
             <h2>Nuevo Pedido</h2>
@@ -153,7 +193,7 @@ function NuevoPedido(props){
             <p className="total">Total a Pagar: <span>$ {total}</span></p>
             
             { total > 0 ? (
-                <form>
+                <form onSubmit={realizarPedido}>
                     <input type="submit" className="btn btn-verde btn-block" value="Realizar Pedido"/>
                 </form>
             ) : null}
@@ -162,4 +202,4 @@ function NuevoPedido(props){
     )
 }
 
-export default NuevoPedido;
+export default withRouter(NuevoPedido); // el with router + linea 152 nos va a permitir redireccionar 
