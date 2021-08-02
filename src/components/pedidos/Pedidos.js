@@ -14,7 +14,7 @@ function Pedidos() {
         }
 
         consultarAPI();
-    }, []);
+    }, [pedidos]);
 
     return(
         <Fragment>
