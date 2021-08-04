@@ -1,4 +1,4 @@
-import React, {useEffect, useState, Fragment} from 'react';
+import React, {useEffect, useState, Fragment, useContext} from 'react';
 
 import clienteAxios from "../../config/axios";
 
@@ -7,11 +7,18 @@ import {Link} from "react-router-dom";
 
 import Spinner from '../layout/Spinner';
 
+//importar el context
+import { CRMContext } from '../context/CRMContext';
+
 function Clientes() {
 
     //trabajar con el state
     //clientes = statem guardarClientes = funcion para guardar el state
     const [clientes, guardarClientes] = useState([]);
+
+    //utilizar valores del context
+    const [auth, guardarAuth] = useContext(CRMContext);
+    console.log(auth);
 
     //use effect es para los hooks, es similar a componentdidmount y willmount
     useEffect( () => {
