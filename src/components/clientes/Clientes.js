@@ -20,7 +20,12 @@ function Clientes() {
         
         //query a la api
         async function consultarApi(){
-            const clientesConsulta = await clienteAxios.get("/clientes", { signal });
+            const clientesConsulta = await clienteAxios.get("/clientes", { 
+                signal, 
+                headers: {
+                    Authorization: `Bearer HOLAMUNDO`
+                }
+            });
             // console.log(clientesConsulta.data);
 
             //colocar el resultado en el state
