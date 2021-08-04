@@ -1,9 +1,16 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import Swal from 'sweetalert2';
 import clienteAxios from "../../config/axios";
 import { withRouter } from 'react-router-dom';
 
+//Context
+import { CRMContext } from '../context/CRMContext';
+
 function Login(props){
+
+    //Auth y token
+    const [auth, guardarAuth] = useContext(CRMContext);
+    // console.log(auth);
 
     //State con los datos del formulario
     const [credenciales, guardarCredenciales] = useState({});
@@ -29,9 +36,15 @@ function Login(props){
             const { token } = respuesta.data;
             localStorage.setItem('token', token);
 
+            //colocar en el state el token
+            guardarAuth({
+                token,
+                auth: true
+            })
+
             //alerta
             Swal.fire({
-                icon: 'sucess',
+                icon: 'success',
                 title: 'Login Correcto',
                 text: 'Has iniciado sesión'
             })
